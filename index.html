@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>埤塘水資源管理遊戲</title>
         <style>
-        #game-container {
-            width: 800px;
-            height: 600px;
+               #game-container {
+            width: 1000px;
+            height: 800px;
             position: relative;
             background-color: #9de0ad;
             overflow: hidden;
             margin: 0 auto;
         }
         #player {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             position: absolute;
             background-image: url('player.png');
             background-size: cover;
             z-index: 10;
         }
         .tile {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             position: absolute;
             background-size: cover;
         }
@@ -35,6 +35,8 @@
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             display: none;
+            border-radius: 10px; /* 新增圓角 */
+            border: 2px solid #f8b400; /* 新增邊框 */
         }
         #info-panel {
             position: absolute;
@@ -42,6 +44,10 @@
             left: 10px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
+            font-size: 20px; /* 調整字體大小 */
+            border-radius: 10px; /* 新增圓角 */
+            border: 2px solid #f8b400; /* 新增邊框 */
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* 新增陰影 */
         }
         #action-panel {
             position: absolute;
@@ -49,6 +55,30 @@
             right: 10px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
+            border-radius: 10px; /* 新增圓角 */
+            border: 2px solid #f8b400; /* 新增邊框 */
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* 新增陰影 */
+        }
+        #action-panel button {
+            font-size: 18px; /* 調整按鈕字體大小 */
+            padding: 10px; /* 增加按鈕內邊距 */
+            margin-bottom: 10px; /* 增加按鈕之間的間距 */
+            background-color:   #009393; /* 調整按鈕背景顏色 */
+            border: none; /* 去除按鈕邊框 */
+            border-radius: 5px; /* 新增按鈕圓角 */
+            color: #fff; /* 調整按鈕字體顏色 */
+            cursor: pointer; /* 新增滑鼠指標樣式 */
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* 新增按鈕陰影 */
+        }
+        #action-panel button:hover {
+            background-color: #f39c12; /* 調整按鈕滑鼠懸停時的背景顏色 */
+        }
+        #win-condition { /* 新增樣式 */
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: red; /* 調整文字顏色 */
+            font-weight: bold; /* 調整字體粗細 */
         }
     </style>
 </head>
@@ -67,6 +97,9 @@
             <button onclick="harvestFarm()">收穫農田</button>
         </div>
     </div>
+
+    <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 新增過關條件說明 -->
+   
     <script>
         const player = document.getElementById('player');
         const dialog = document.getElementById('dialog');
@@ -80,6 +113,8 @@
         let tiles = [];
         let lastTurnTime = Date.now();
 
+
+        movePlayer(450, 350) 
         function updateInfo() {
             document.getElementById('water').textContent = Math.floor(water);
             document.getElementById('water-capacity').textContent = waterCapacity;
@@ -88,8 +123,8 @@
         }
 
         function movePlayer(dx, dy) {
-            const newX = Math.max(0, Math.min(760, playerX + dx));
-            const newY = Math.max(0, Math.min(560, playerY + dy));
+            const newX = Math.max(0, Math.min(950, playerX + dx));
+            const newY = Math.max(0, Math.min(750, playerY + dy));
             playerX = newX;
             playerY = newY;
             player.style.left = playerX + 'px';
@@ -111,7 +146,7 @@
                     if (tile.type === 'pond') {
                         const dx = Math.abs(tile.x - playerX);
                         const dy = Math.abs(tile.y - playerY);
-                        if ((dx === 0 && dy === 40) || (dx === 40 && dy === 0)) {
+                        if ((dx === 0 && dy === 50) || (dx === 50 && dy === 0)) {
                             capacity = 15;
                             tile.capacity = 15;
                             break;
@@ -185,7 +220,7 @@ function gameLoop() {
         lastTurnTime = currentTime;
 
         // 每回合下一次雨
-        const rainfall = Math.floor(Math.random() * 21); // 0~20的隨機雨量
+        const rainfall = 1+Math.floor(Math.random() * 20); // 1~20的隨機雨量
         let collectedWater = 0;
 
         if (water < waterCapacity) {
@@ -232,10 +267,10 @@ function gameLoop() {
 
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
-                case 'ArrowUp': movePlayer(0, -40); break;
-                case 'ArrowDown': movePlayer(0, 40); break;
-                case 'ArrowLeft': movePlayer(-40, 0); break;
-                case 'ArrowRight': movePlayer(40, 0); break;
+                case 'ArrowUp': movePlayer(0, -50); break;
+                case 'ArrowDown': movePlayer(0, 50); break;
+                case 'ArrowLeft': movePlayer(-50, 0); break;
+                case 'ArrowRight': movePlayer(50, 0); break;
             }
         });
 
