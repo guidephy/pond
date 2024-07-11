@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>埤塘水資源管理遊戲</title>
-    <style>
-        #game-container {
+        <style>
+               #game-container {
             width: 1000px;
             height: 800px;
             position: relative;
@@ -63,7 +63,7 @@
             font-size: 18px; /* 調整按鈕字體大小 */
             padding: 10px; /* 增加按鈕內邊距 */
             margin-bottom: 10px; /* 增加按鈕之間的間距 */
-            background-color: #f8b400; /* 調整按鈕背景顏色 */
+            background-color:   #009393; /* 調整按鈕背景顏色 */
             border: none; /* 去除按鈕邊框 */
             border-radius: 5px; /* 新增按鈕圓角 */
             color: #fff; /* 調整按鈕字體顏色 */
@@ -77,7 +77,7 @@
             text-align: center;
             margin-top: 20px;
             font-size: 18px;
-            color: #f8b400; /* 調整文字顏色 */
+            color: red; /* 調整文字顏色 */
             font-weight: bold; /* 調整字體粗細 */
         }
     </style>
@@ -97,7 +97,9 @@
             <button onclick="harvestFarm()">收穫農田</button>
         </div>
     </div>
+
     <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 新增過關條件說明 -->
+   
     <script>
         const player = document.getElementById('player');
         const dialog = document.getElementById('dialog');
@@ -111,8 +113,8 @@
         let tiles = [];
         let lastTurnTime = Date.now();
 
-        movePlayer(450, 350);
 
+        movePlayer(450, 350) 
         function updateInfo() {
             document.getElementById('water').textContent = Math.floor(water);
             document.getElementById('water-capacity').textContent = waterCapacity;
@@ -138,7 +140,7 @@
                 pond.style.top = playerY + 'px';
                 gameContainer.appendChild(pond);
                 let capacity = 10;
-
+                
                 // 檢查相鄰的埤塘
                 for (let tile of tiles) {
                     if (tile.type === 'pond') {
@@ -211,57 +213,57 @@
             return tiles.find(tile => tile.x === x && tile.y === y);
         }
 
-        function gameLoop() {
-            const currentTime = Date.now();
-            if (currentTime - lastTurnTime >= 5000) { // 每5秒一回合
-                turn++;
-                lastTurnTime = currentTime;
+function gameLoop() {
+    const currentTime = Date.now();
+    if (currentTime - lastTurnTime >= 5000) { // 每5秒一回合
+        turn++;
+        lastTurnTime = currentTime;
 
-                // 每回合下一次雨
-                const rainfall = 1 + Math.floor(Math.random() * 20); // 1~20的隨機雨量
-                let collectedWater = 0;
+        // 每回合下一次雨
+        const rainfall = 1+Math.floor(Math.random() * 20); // 1~20的隨機雨量
+        let collectedWater = 0;
 
-                if (water < waterCapacity) {
-                    const spaceLeft = waterCapacity - water;
-                    if (rainfall <= spaceLeft) {
-                        // 雨量全部被收集
-                        collectedWater = rainfall;
-                    } else {
-                        // 只收集到儲存上限
-                        collectedWater = spaceLeft;
-                    }
-                    water += collectedWater;
-                }
+        if (water < waterCapacity) {
+            const spaceLeft = waterCapacity - water;
+            if (rainfall <= spaceLeft) {
+                // 雨量全部被收集
+                collectedWater = rainfall;
+            } else {
+                // 只收集到儲存上限
+                collectedWater = spaceLeft;
+            }
+            water += collectedWater;
+        }
 
-                let message = `下雨了！雨量：${rainfall}`;
-                if (collectedWater > 0) {
-                    message += `，收集到${collectedWater}單位水。`;
-                } else {
-                    message += "，但水資源已達儲存上限，無法收集更多水。";
-                }
-                showDialog(message);
+        let message = `下雨了！雨量：${rainfall}`;
+        if (collectedWater > 0) {
+            message += `，收集到${collectedWater}單位水。`;
+        } else {
+            message += "，但水資源已達儲存上限，無法收集更多水。";
+        }
+        showDialog(message);
 
-                // 農田生長邏輯保持不變
-                for (let tile of tiles) {
-                    if (tile.type === 'farm') {
-                        tile.growth++;
-                        if (tile.growth >= 5) {
-                            tile.element.style.backgroundImage = "url('ripe_farm.png')";
-                        }
-                    }
-                }
-
-                updateInfo();
-
-                // 檢查遊戲是否結束
-                if (money >= 500) {
-                    alert(`恭喜你！在第${turn}回合達成目標，遊戲結束！`);
-                    return;
+        // 農田生長邏輯保持不變
+        for (let tile of tiles) {
+            if (tile.type === 'farm') {
+                tile.growth++;
+                if (tile.growth >= 5) {
+                    tile.element.style.backgroundImage = "url('ripe_farm.png')";
                 }
             }
-
-            requestAnimationFrame(gameLoop);
         }
+
+        updateInfo();
+
+        // 檢查遊戲是否結束
+        if (money >= 500) {
+            alert(`恭喜你！在第${turn}回合達成目標，遊戲結束！`);
+            return;
+        }
+    }
+
+    requestAnimationFrame(gameLoop);
+}
 
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
@@ -270,41 +272,6 @@
                 case 'ArrowLeft': movePlayer(-50, 0); break;
                 case 'ArrowRight': movePlayer(50, 0); break;
             }
-        });
-
-        // 新增觸控事件處理
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        gameContainer.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-        });
-
-        gameContainer.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            const touchEndX = touch.clientX;
-            const touchEndY = touch.clientY;
-            const dx = touchEndX - touchStartX;
-            const dy = touchEndY - touchStartY;
-
-            if (Math.abs(dx) > Math.abs(dy)) {
-                if (dx > 0) {
-                    movePlayer(50, 0); // 向右移動
-                } else {
-                    movePlayer(-50, 0); // 向左移動
-                }
-            } else {
-                if (dy > 0) {
-                    movePlayer(0, 50); // 向下移動
-                } else {
-                    movePlayer(0, -50); // 向上移動
-                }
-            }
-
-            touchStartX = touchEndX;
-            touchStartY = touchEndY;
         });
 
         updateInfo();
