@@ -142,8 +142,8 @@
         }
         /* 對行動裝置的字體大小調整 */
         @media (max-width: 768px) {
-            #info-panel, #action-panel, #dialog, #win-condition {
-                font-size: 14px;
+            #info-panel, #action-panel, #win-condition {
+                font-size: 10px;
             }
             #action-panel button {
                 font-size: 14px;
@@ -153,6 +153,18 @@
                 font-size: 14px;
                 width: 25px;
                 height: 25px;
+            }
+            #dialog {
+                bottom: 10px;
+                top: auto;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #win-condition {
+                position: static;
+                margin-top: 10px;
+                text-align: center;
+                font-size: 14px;
             }
         }
     </style>
@@ -171,6 +183,7 @@
             <button onclick="buildPond()">建立埤塘 (10元)</button>
             <button onclick="plantFarm()">種植農田 (50水)</button>
             <button onclick="harvestFarm()">收穫農田</button>
+            <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
         </div>
         <div id="d-pad">
             <div class="d-pad-row">
@@ -182,7 +195,6 @@
                 <div class="d-pad-button" onclick="movePlayer(1, 0)">▶</div>
             </div>
         </div>
-        <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
     </div>
 
     <script>
