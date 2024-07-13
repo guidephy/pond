@@ -13,7 +13,7 @@
         }
         #game-container {
             width: 100%;
-            height: 80vh;
+            height: 80vh; /* 調整高度為螢幕的80% */
             position: relative;
             background-color: #9de0ad;
             overflow: hidden;
@@ -96,6 +96,7 @@
             border-radius: 10px;
             border: 2px solid #f8b400;
             box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            z-index: 5; /* 保證在方向鍵下方 */
         }
         .rotate-screen {
             display: none;
@@ -117,6 +118,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 10; /* 保證在過關條件上方 */
         }
         .d-pad-row {
             display: flex;
@@ -374,6 +376,42 @@
             }
         });
 
+        // 監聽觸控事件
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        gameContainer.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+
+        gameContainer.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const touchEndX = touch.clientX;
+            const touchEndY = touch.clientY;
+
+            const dx = touchEndX - touchStartX;
+            const dy = touchEndY - touchStartY;
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) {
+                    movePlayer(1, 0); // 右移
+                } else {
+                    movePlayer(-1, 0); // 左移
+                }
+            } else {
+                if (dy > 0) {
+                    movePlayer(0, 1); // 下移
+                } else {
+                    movePlayer(0, -1); // 上移
+                }
+            }
+
+            touchStartX = touchEndX;
+            touchStartY = touchEndY;
+        });
+
         // 檢查裝置方向
         function checkOrientation() {
             if (window.innerWidth < window.innerHeight) {
@@ -414,4 +452,3 @@
     </script>
 </body>
 </html>
-
