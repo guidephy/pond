@@ -34,23 +34,19 @@
         }
         #dialog {
             position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50%; /* 設置寬度為50% */
+            bottom: 10px;
+            left: 400px;
+            right: 50px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             display: none;
-            border-radius: 10px;
-            border: 2px solid #f8b400;
-            text-align: center; /* 讓文字水平置中 */
-            z-index: 100; /* 保證顯示在最上方 */
+            border-radius: 10px; /* 新增圓角 */
+            border: 2px solid #f8b400; /* 新增邊框 */
         }
         #info-panel {
             position: absolute;
-            top: 60px;
+            top: 6px;
             left: 10px;
-            width: 20%; /* 設置寬度為20% */
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             font-size: 20px;
@@ -60,9 +56,8 @@
         }
         #action-panel {
             position: absolute;
-            top: 60px;
+            top: 5px;
             right: 10px;
-            width: 30%; /* 設置寬度為30% */
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 10px;
@@ -128,8 +123,8 @@
             display: flex;
         }
         .d-pad-button {
-            width: 50px; /* 放大尺寸 */
-            height: 50px; /* 放大尺寸 */
+            width: 30px;
+            height: 30px;
             margin: 5px;
             background-color: #009393;
             border: 2px solid #006666;
@@ -145,28 +140,23 @@
             background-color: #f39c12;
         }
         /* 對行動裝置的字體大小調整 */
-        @media (max-width: 900px) {
+        @media (max-width: 790px) {
             #info-panel, #action-panel, #win-condition {
-                font-size: 10px;
-                width: 50%; /* 設置寬度為50% */
-            }
-            #action-panel {
-                width: 50%; /* 設置寬度為50% */
+                font-size: 8px;
             }
             #action-panel button {
-                font-size: 14px;
+                font-size: 10px;
                 padding: 5px;
             }
             .d-pad-button {
                 font-size: 14px;
-                width: 40px; /* 放大尺寸 */
-                height: 40px; /* 放大尺寸 */
+                width: 40px;
+                height: 40px;
             }
             #dialog {
                 bottom: 10px;
                 top: auto;
                 left: 50%;
-                width: 90%; /* 設置寬度為90% */
                 transform: translateX(-50%);
             }
             #win-condition {
@@ -192,7 +182,7 @@
             <button onclick="buildPond()">建立埤塘 (10元)</button>
             <button onclick="plantFarm()">種植農田 (50水)</button>
             <button onclick="harvestFarm()">收穫農田</button>
-            <div>過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
+            <div >過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
         </div>
         <div id="d-pad">
             <div class="d-pad-row">
@@ -397,15 +387,7 @@
             }
         });
 
-        // 監聽觸控事件
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        gameContainer.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-        });
+ 
 
         gameContainer.addEventListener('touchmove', (e) => {
             const touch = e.touches[0];
@@ -473,4 +455,3 @@
     </script>
 </body>
 </html>
-
