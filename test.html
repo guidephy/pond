@@ -72,23 +72,12 @@
         #action-panel button:hover {
             background-color: #f39c12;
         }
-        #rainfall-info {
-            margin-top: 10px;
-            font-size: 18px;
-        }
         #win-condition {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
             text-align: center;
+            margin-top: 20px;
             font-size: 18px;
             color: red;
             font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid #f8b400;
-            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
         }
         .rotate-screen {
             display: none;
@@ -102,6 +91,16 @@
             font-size: 24px;
             text-align: center;
             padding-top: 50%;
+        }
+        /* 對行動裝置的字體大小調整 */
+        @media (max-width: 768px) {
+            #info-panel, #action-panel {
+                font-size: 14px;
+            }
+            #action-panel button {
+                font-size: 14px;
+                padding: 5px;
+            }
         }
     </style>
 </head>
@@ -119,16 +118,15 @@
             <button onclick="buildPond()">建立埤塘 (10元)</button>
             <button onclick="plantFarm()">種植農田 (50水)</button>
             <button onclick="harvestFarm()">收穫農田</button>
-            <div id="rainfall-info">降雨資訊會顯示在這裡</div>
         </div>
     </div>
-    <div id="win-condition">過關條件: 金錢超過500元</div>
+
+    <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
     <script>
         const player = document.getElementById('player');
         const dialog = document.getElementById('dialog');
         const gameContainer = document.getElementById('game-container');
         const rotateScreenMessage = document.querySelector('.rotate-screen');
-        const rainfallInfo = document.getElementById('rainfall-info');
         let playerX = 0;
         let playerY = 0;
         let water = 0;
@@ -275,7 +273,6 @@
                     message += "，但水資源已達儲存上限，無法收集更多水。";
                 }
                 showDialog(message);
-                rainfallInfo.textContent = message;
 
                 // 農田生長邏輯
                 for (let tile of tiles) {
@@ -365,3 +362,4 @@
     </script>
 </body>
 </html>
+
