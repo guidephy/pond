@@ -1,91 +1,106 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>水資源管理遊戲</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>埤塘水資源管理遊戲</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #orientation-message {
-            display: none;
-            text-align: center;
-            font-size: 24px;
-            color: #333;
-        }
         #game-container {
-            display: none;
             width: 100%;
-            max-width: 800px;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        #game-area {
-            width: 100%;
-            height: 300px;
+            height: 100vh;
             position: relative;
-            background-color: #e0ffe0;
-            border: 1px solid #aaa;
+            background-color: #9de0ad;
             overflow: hidden;
         }
         #player {
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            position: absolute;
-            transition: all 0.1s;
-        }
-        #info-panel, #action-panel {
-            margin-bottom: 20px;
-        }
-        #action-panel button {
-            margin: 5px;
-            padding: 10px;
-        }
-        #mobile-controls {
-            display: none;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        #mobile-controls button {
             width: 50px;
             height: 50px;
-            margin: 5px;
+            position: absolute;
+            background-image: url('player.png');
+            background-size: cover;
+            z-index: 10;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            background-size: cover;
+        }
+        #dialog {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            display: none;
+            border-radius: 10px;
+            border: 2px solid #f8b400;
+        }
+        #info-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
             font-size: 20px;
+            border-radius: 10px;
+            border: 2px solid #f8b400;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
         }
-        .pond {
-            width: 40px;
-            height: 40px;
-            background-color: blue;
+        #action-panel {
             position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #f8b400;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
         }
-        .field {
-            width: 30px;
-            height: 30px;
-            background-color: green;
-            position: absolute;
+        #action-panel button {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #009393;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #action-panel button:hover {
+            background-color: #f39c12;
+        }
+        #win-condition {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: red;
+            font-weight: bold;
+        }
+        /* 新增的樣式 */
+        .rotate-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            padding-top: 50%;
         }
     </style>
 </head>
 <body>
-    <div id="orientation-message">
-        請將設備轉至橫向以開始遊戲
-    </div>
-
+    <div class="rotate-screen">請旋轉您的裝置至橫向以繼續遊戲</div>
     <div id="game-container">
-        <div id="game-area">
-            <div id="player"></div>
-        </div>
+        <div id="player"></div>
+        <div id="dialog"></div>
         <div id="info-panel">
             水資源: <span id="water">0</span> / <span id="water-capacity">0</span><br>
             金錢: <span id="money">100</span> 元<br>
@@ -93,181 +108,247 @@
         </div>
         <div id="action-panel">
             <button onclick="buildPond()">建立埤塘 (10元)</button>
-            <button onclick="plantField()">種植農田 (50水)</button>
-            <button onclick="harvestField()">收穫農田</button>
-        </div>
-        <div id="mobile-controls">
-            <button ontouchstart="startMove('up')" ontouchend="stopMove()">↑</button><br>
-            <button ontouchstart="startMove('left')" ontouchend="stopMove()">←</button>
-            <button ontouchstart="startMove('down')" ontouchend="stopMove()">↓</button>
-            <button ontouchstart="startMove('right')" ontouchend="stopMove()">→</button>
-        </div>
-        <div id="win-condition">
-            過關條件: 金錢超過500元
+            <button onclick="plantFarm()">種植農田 (50水)</button>
+            <button onclick="harvestFarm()">收穫農田</button>
         </div>
     </div>
-
+    <div id="win-condition">過關條件: 金錢超過500元</div>
     <script>
-        let player = { x: 0, y: 0 };
+        const player = document.getElementById('player');
+        const dialog = document.getElementById('dialog');
+        const gameContainer = document.getElementById('game-container');
+        const rotateScreenMessage = document.querySelector('.rotate-screen');
+        let playerX = 0;
+        let playerY = 0;
         let water = 0;
-        let waterCapacity = 100;
+        let waterCapacity = 0;
         let money = 100;
         let turn = 0;
-        let ponds = [];
-        let fields = [];
-        let moveInterval;
+        let tiles = [];
+        let lastTurnTime = Date.now();
 
-        function checkOrientation() {
-            if (window.innerHeight > window.innerWidth) {
-                document.getElementById('orientation-message').style.display = 'block';
-                document.getElementById('game-container').style.display = 'none';
-            } else {
-                document.getElementById('orientation-message').style.display = 'none';
-                document.getElementById('game-container').style.display = 'block';
-            }
-        }
+        // 初始位置
+        movePlayer(450, 350);
 
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        function initGame() {
-            checkOrientation();
-            if (isMobile()) {
-                document.getElementById('mobile-controls').style.display = 'flex';
-            }
-            updatePlayerPosition();
-            updateInfoPanel();
-        }
-
-        function updatePlayerPosition() {
-            const playerElement = document.getElementById('player');
-            playerElement.style.left = player.x + 'px';
-            playerElement.style.top = player.y + 'px';
-        }
-
-        function updateInfoPanel() {
-            document.getElementById('water').textContent = water;
+        // 更新資訊面板
+        function updateInfo() {
+            document.getElementById('water').textContent = Math.floor(water);
             document.getElementById('water-capacity').textContent = waterCapacity;
             document.getElementById('money').textContent = money;
             document.getElementById('turn').textContent = turn;
         }
 
-        function move(direction) {
-            const step = 5;
-            const gameArea = document.getElementById('game-area');
-            const maxX = gameArea.clientWidth - 20;
-            const maxY = gameArea.clientHeight - 20;
-
-            switch (direction) {
-                case 'up':
-                    player.y = Math.max(0, player.y - step);
-                    break;
-                case 'down':
-                    player.y = Math.min(maxY, player.y + step);
-                    break;
-                case 'left':
-                    player.x = Math.max(0, player.x - step);
-                    break;
-                case 'right':
-                    player.x = Math.min(maxX, player.x + step);
-                    break;
-            }
-            updatePlayerPosition();
+        // 移動玩家
+        function movePlayer(dx, dy) {
+            const newX = Math.max(0, Math.min(gameContainer.offsetWidth - player.offsetWidth, playerX + dx));
+            const newY = Math.max(0, Math.min(gameContainer.offsetHeight - player.offsetHeight, playerY + dy));
+            playerX = newX;
+            playerY = newY;
+            player.style.left = playerX + 'px';
+            player.style.top = playerY + 'px';
         }
 
-        function startMove(direction) {
-            if (moveInterval) clearInterval(moveInterval);
-            moveInterval = setInterval(() => move(direction), 100);
-        }
-
-        function stopMove() {
-            if (moveInterval) {
-                clearInterval(moveInterval);
-                moveInterval = null;
-            }
-        }
-
+        // 建立埤塘
         function buildPond() {
-            if (money >= 10) {
+            if (money >= 10 && !getTileAtPosition(playerX, playerY)) {
+                const pond = document.createElement('div');
+                pond.className = 'tile';
+                pond.style.backgroundImage = "url('pond.png')";
+                pond.style.left = playerX + 'px';
+                pond.style.top = playerY + 'px';
+                gameContainer.appendChild(pond);
+                let capacity = 10;
+
+                // 檢查相鄰的埤塘
+                for (let tile of tiles) {
+                    if (tile.type === 'pond') {
+                        const dx = Math.abs(tile.x - playerX);
+                        const dy = Math.abs(tile.y - playerY);
+                        if ((dx === 0 && dy === 50) || (dx === 50 && dy === 0)) {
+                            capacity = 15;
+                            tile.capacity = 15;
+                            break;
+                        }
+                    }
+                }
+
+                tiles.push({type: 'pond', element: pond, x: playerX, y: playerY, capacity: capacity});
+                waterCapacity += capacity;
                 money -= 10;
-                waterCapacity += 50;
-                const pond = { x: player.x, y: player.y };
-                ponds.push(pond);
-                const pondElement = document.createElement('div');
-                pondElement.className = 'pond';
-                pondElement.style.left = pond.x + 'px';
-                pondElement.style.top = pond.y + 'px';
-                document.getElementById('game-area').appendChild(pondElement);
-                updateInfoPanel();
+                updateInfo();
+                showDialog(`你建立了一個埤塘！它能儲存${capacity}單位的水。`);
+            } else if (getTileAtPosition(playerX, playerY)) {
+                showDialog("這裡已經有建築物了，無法建立埤塘。");
+            } else {
+                showDialog("金錢不足，無法建立埤塘。");
             }
         }
 
-        function plantField() {
-            if (water >= 50) {
+        // 種植農田
+        function plantFarm() {
+            if (water >= 50 && !getTileAtPosition(playerX, playerY)) {
+                const farm = document.createElement('div');
+                farm.className = 'tile';
+                farm.style.backgroundImage = "url('farm.png')";
+                farm.style.left = playerX + 'px';
+                farm.style.top = playerY + 'px';
+                gameContainer.appendChild(farm);
+                tiles.push({type: 'farm', element: farm, x: playerX, y: playerY, growth: 0});
                 water -= 50;
-                const field = { x: player.x, y: player.y, growth: 0 };
-                fields.push(field);
-                const fieldElement = document.createElement('div');
-                fieldElement.className = 'field';
-                fieldElement.style.left = field.x + 'px';
-                fieldElement.style.top = field.y + 'px';
-                document.getElementById('game-area').appendChild(fieldElement);
-                updateInfoPanel();
+                updateInfo();
+                showDialog("你種植了一塊農田！5回合後可以收穫。");
+            } else if (getTileAtPosition(playerX, playerY)) {
+                showDialog("這裡已經有建築物了，無法種植農田。");
+            } else {
+                showDialog("水資源不足，無法種植農田。");
             }
         }
 
-        function harvestField() {
-            for (let i = 0; i < fields.length; i++) {
-                if (Math.abs(fields[i].x - player.x) < 20 && Math.abs(fields[i].y - player.y) < 20) {
-                    if (fields[i].growth >= 3) {
-                        money += 100;
-                        fields.splice(i, 1);
-                        document.querySelectorAll('.field')[i].remove();
-                        updateInfoPanel();
-                        break;
+        // 收穫農田
+        function harvestFarm() {
+            for (let i = 0; i < tiles.length; i++) {
+                if (tiles[i].type === 'farm' && tiles[i].growth >= 5) {
+                    if (tiles[i].x === playerX && tiles[i].y === playerY) {
+                        money += 50;
+                        gameContainer.removeChild(tiles[i].element);
+                        tiles.splice(i, 1);
+                        updateInfo();
+                        showDialog("你收穫了農田！獲得50元。");
+                        return;
                     }
                 }
             }
+            showDialog("這裡沒有可以收穫的農田。");
         }
 
-        function endTurn() {
-            turn++;
-            water = Math.min(water + ponds.length * 10, waterCapacity);
-            fields.forEach(field => field.growth++);
-            updateInfoPanel();
-            checkWinCondition();
+        // 顯示對話框
+        function showDialog(text) {
+            dialog.textContent = text;
+            dialog.style.display = 'block';
+            setTimeout(() => {
+                dialog.style.display = 'none';
+            }, 3000);
         }
 
-        function checkWinCondition() {
-            if (money >= 500) {
-                alert("恭喜你贏了！你成功管理了水資源並賺到了500元。");
+        // 獲取特定位置的地磚
+        function getTileAtPosition(x, y) {
+            return tiles.find(tile => tile.x === x && tile.y === y);
+        }
+
+        // 遊戲循環
+        function gameLoop() {
+            const currentTime = Date.now();
+            if (currentTime - lastTurnTime >= 5000) { // 每5秒一回合
+                turn++;
+                lastTurnTime = currentTime;
+
+                // 每回合下一次雨
+                const rainfall = 1 + Math.floor(Math.random() * 20); // 1~20的隨機雨量
+                let collectedWater = 0;
+
+                if (water < waterCapacity) {
+                    const spaceLeft = waterCapacity - water;
+                    if (rainfall <= spaceLeft) {
+                        collectedWater = rainfall;
+                    } else {
+                        collectedWater = spaceLeft;
+                    }
+                    water += collectedWater;
+                }
+
+                let message = `下雨了！雨量：${rainfall}`;
+                if (collectedWater > 0) {
+                    message += `，收集到${collectedWater}單位水。`;
+                } else {
+                    message += "，但水資源已達儲存上限，無法收集更多水。";
+                }
+                showDialog(message);
+
+                // 農田生長邏輯
+                for (let tile of tiles) {
+                    if (tile.type === 'farm') {
+                        tile.growth++;
+                        if (tile.growth >= 5) {
+                            tile.element.style.backgroundImage = "url('ripe_farm.png')";
+                        }
+                    }
+                }
+
+                updateInfo();
+
+                // 檢查遊戲是否結束
+                if (money >= 500) {
+                    alert(`恭喜你！在第${turn}回合達成目標，遊戲結束！`);
+                    return;
+                }
             }
+
+            requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener('load', initGame);
-        window.addEventListener('resize', checkOrientation);
-
-        // 鍵盤控制
-        document.addEventListener('keydown', function(event) {
-            switch(event.key) {
-                case 'ArrowUp':
-                    move('up');
-                    break;
-                case 'ArrowDown':
-                    move('down');
-                    break;
-                case 'ArrowLeft':
-                    move('left');
-                    break;
-                case 'ArrowRight':
-                    move('right');
-                    break;
-                case 'Enter':
-                    endTurn();
-                    break;
+        // 監聽鍵盤事件
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': movePlayer(0, -50); break;
+                case 'ArrowDown': movePlayer(0, 50); break;
+                case 'ArrowLeft': movePlayer(-50, 0); break;
+                case 'ArrowRight': movePlayer(50, 0); break;
             }
         });
+
+        // 監聽觸控事件
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        gameContainer.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        });
+
+        gameContainer.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const touchEndX = touch.clientX;
+            const touchEndY = touch.clientY;
+
+            const dx = touchEndX - touchStartX;
+            const dy = touchEndY - touchStartY;
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) {
+                    movePlayer(50, 0); // 右移
+                } else {
+                    movePlayer(-50, 0); // 左移
+                }
+            } else {
+                if (dy > 0) {
+                    movePlayer(0, 50); // 下移
+                } else {
+                    movePlayer(0, -50); // 上移
+                }
+            }
+
+            touchStartX = touchEndX;
+            touchStartY = touchEndY;
+        });
+
+        // 檢查裝置方向
+        function checkOrientation() {
+            if (window.innerWidth < window.innerHeight) {
+                rotateScreenMessage.style.display = 'block';
+                gameContainer.style.display = 'none';
+            } else {
+                rotateScreenMessage.style.display = 'none';
+                gameContainer.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('resize', checkOrientation);
+        window.addEventListener('orientationchange', checkOrientation);
+
+        updateInfo();
+        checkOrientation();
+        gameLoop();
     </script>
 </body>
 </html>
