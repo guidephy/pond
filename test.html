@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -73,14 +72,24 @@
         #action-panel button:hover {
             background-color: #f39c12;
         }
+        #rainfall-info {
+            margin-top: 10px;
+            font-size: 18px;
+        }
         #win-condition {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
             text-align: center;
-            margin-top: 20px;
             font-size: 18px;
             color: red;
             font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #f8b400;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
         }
-        /* 新增的樣式 */
         .rotate-screen {
             display: none;
             position: fixed;
@@ -110,6 +119,7 @@
             <button onclick="buildPond()">建立埤塘 (10元)</button>
             <button onclick="plantFarm()">種植農田 (50水)</button>
             <button onclick="harvestFarm()">收穫農田</button>
+            <div id="rainfall-info">降雨資訊會顯示在這裡</div>
         </div>
     </div>
     <div id="win-condition">過關條件: 金錢超過500元</div>
@@ -118,6 +128,7 @@
         const dialog = document.getElementById('dialog');
         const gameContainer = document.getElementById('game-container');
         const rotateScreenMessage = document.querySelector('.rotate-screen');
+        const rainfallInfo = document.getElementById('rainfall-info');
         let playerX = 0;
         let playerY = 0;
         let water = 0;
@@ -140,8 +151,9 @@
 
         // 移動玩家
         function movePlayer(dx, dy) {
-            const newX = Math.max(0, Math.min(gameContainer.offsetWidth - player.offsetWidth, playerX + dx));
-            const newY = Math.max(0, Math.min(gameContainer.offsetHeight - player.offsetHeight, playerY + dy));
+            const stepSize = 10; // 調整步幅大小
+            const newX = Math.max(0, Math.min(gameContainer.offsetWidth - player.offsetWidth, playerX + dx * stepSize));
+            const newY = Math.max(0, Math.min(gameContainer.offsetHeight - player.offsetHeight, playerY + dy * stepSize));
             playerX = newX;
             playerY = newY;
             player.style.left = playerX + 'px';
@@ -263,6 +275,7 @@
                     message += "，但水資源已達儲存上限，無法收集更多水。";
                 }
                 showDialog(message);
+                rainfallInfo.textContent = message;
 
                 // 農田生長邏輯
                 for (let tile of tiles) {
@@ -289,10 +302,10 @@
         // 監聽鍵盤事件
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
-                case 'ArrowUp': movePlayer(0, -50); break;
-                case 'ArrowDown': movePlayer(0, 50); break;
-                case 'ArrowLeft': movePlayer(-50, 0); break;
-                case 'ArrowRight': movePlayer(50, 0); break;
+                case 'ArrowUp': movePlayer(0, -1); break;
+                case 'ArrowDown': movePlayer(0, 1); break;
+                case 'ArrowLeft': movePlayer(-1, 0); break;
+                case 'ArrowRight': movePlayer(1, 0); break;
             }
         });
 
@@ -316,15 +329,15 @@
 
             if (Math.abs(dx) > Math.abs(dy)) {
                 if (dx > 0) {
-                    movePlayer(50, 0); // 右移
+                    movePlayer(1, 0); // 右移
                 } else {
-                    movePlayer(-50, 0); // 左移
+                    movePlayer(-1, 0); // 左移
                 }
             } else {
                 if (dy > 0) {
-                    movePlayer(0, 50); // 下移
+                    movePlayer(0, 1); // 下移
                 } else {
-                    movePlayer(0, -50); // 上移
+                    movePlayer(0, -1); // 上移
                 }
             }
 
