@@ -386,15 +386,7 @@
             }
         });
 
-        // 監聽觸控事件
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        gameContainer.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-        });
+ 
 
         gameContainer.addEventListener('touchmove', (e) => {
             const touch = e.touches[0];
