@@ -2,9 +2,15 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>埤塘水資源管理遊戲</title>
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
         #game-container {
             width: 100%;
             height: 100vh;
@@ -27,7 +33,7 @@
             background-size: cover;
         }
         #dialog {
-            position: absolute;
+              position: absolute;
             top: 10px;
             left: 50%;
 
@@ -126,16 +132,13 @@
             回合: <span id="turn">0</span>
         </div>
         <div id="action-panel">
-
             <button onclick="buildPond()">建立埤塘 (10元)</button>
             <button onclick="plantFarm()">種植農田 (50水)</button>
             <button onclick="harvestFarm()">收穫農田</button>
-
         </div>
-        <div id="win-condition">過關條件: 金錢超過500元</div>
+        <div id="win-condition">過關條件: 金錢超過500元</div> <!-- 過關條件說明 -->
     </div>
 
-    <!-- 過關條件說明 -->
     <script>
         const player = document.getElementById('player');
         const dialog = document.getElementById('dialog');
@@ -376,19 +379,22 @@
 
         // 進入全螢幕模式
         function enterFullscreen() {
-            if (gameContainer.requestFullscreen) {
-                gameContainer.requestFullscreen();
-            } else if (gameContainer.mozRequestFullScreen) { // Firefox
-                gameContainer.mozRequestFullScreen();
-            } else if (gameContainer.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                gameContainer.webkitRequestFullscreen();
-            } else if (gameContainer.msRequestFullscreen) { // IE/Edge
-                gameContainer.msRequestFullscreen();
+            const elem = gameContainer;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
             }
         }
 
         // 當點擊遊戲容器時，進入全螢幕模式
-        gameContainer.addEventListener('click', enterFullscreen);
+        gameContainer.addEventListener('click', () => {
+            enterFullscreen();
+        });
 
         window.addEventListener('resize', checkOrientation);
         window.addEventListener('orientationchange', checkOrientation);
