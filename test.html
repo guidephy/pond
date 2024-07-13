@@ -137,7 +137,14 @@
         let lastTurnTime = Date.now();
 
         // 初始位置
-        movePlayer(450, 350);
+        function centerPlayer() {
+            const containerWidth = gameContainer.offsetWidth;
+            const containerHeight = gameContainer.offsetHeight;
+            playerX = (containerWidth - player.offsetWidth) / 2;
+            playerY = (containerHeight - player.offsetHeight) / 2;
+            player.style.left = playerX + 'px';
+            player.style.top = playerY + 'px';
+        }
 
         // 更新資訊面板
         function updateInfo() {
@@ -374,9 +381,9 @@
 
         updateInfo();
         checkOrientation();
+        centerPlayer();
         gameLoop();
     </script>
 </body>
 </html>
-
 
