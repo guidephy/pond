@@ -13,7 +13,7 @@
         }
         #game-container {
             width: 100%;
-            height: 85vh; /* 調整高度為螢幕的90% */
+            height: 85vh; /* 調整高度為螢幕的85% */
             position: relative;
             background-color: #9de0ad;
             overflow: hidden;
@@ -117,6 +117,7 @@
             flex-direction: column;
             align-items: center;
             z-index: 10; /* 保證在過關條件上方 */
+            opacity: 0.3; /* 設置透明度 */
         }
         .d-pad-row {
             display: flex;
@@ -141,16 +142,16 @@
         /* 對行動裝置的字體大小調整 */
         @media (max-width: 768px) {
             #info-panel, #action-panel, #win-condition {
-                font-size: 10px;
+                font-size: 8px;
             }
             #action-panel button {
-                font-size: 14px;
+                font-size: 10px;
                 padding: 5px;
             }
             .d-pad-button {
                 font-size: 14px;
-                width: 25px;
-                height: 25px;
+                width: 40px;
+                height: 40px;
             }
             #dialog {
                 bottom: 10px;
